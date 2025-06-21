@@ -3,6 +3,7 @@
         "Ichain Lami"
     ],
     "java.project.referencedLibraries": [
-        "Ichain Lami\\lib\\gson-2.13.1.jar"
+        "Ichain Lami\\lib\\bcprov-jdk18on-1.81.jar",
+        "c:\\Projects\\portfolio\\Ichain Lami\\lib\\gson-2.13.1.jar"
     ]
 }
