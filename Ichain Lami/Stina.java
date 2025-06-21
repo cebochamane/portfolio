@@ -10,8 +10,8 @@ public class Stina {
     public String merkleRoot;
     public ArrayList<Transaction> transactions = new ArrayList<Transaction>();
 
-    public Stina(String data, String prevHash) {
-        this.data = data;
+    public Stina(String prevHash) {
+
         this.prevHash = prevHash;
         this.timeStamp = new Date().getTime();
         this.hash = calculateHash();
