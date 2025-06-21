@@ -29,7 +29,7 @@ public class NoobChain {
         genesisTransaction = new Transaction(coinbase.publicKey, walletA.publicKey, 100f, null);
         genesisTransaction.generateSignature(coinbase.privateKey); // manually sign the genesis transaction
         genesisTransaction.transactionId = "0"; // manually set the transaction id
-        genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.reciepient, genesisTransaction.value,
+        genesisTransaction.outputs.add(new TransactionOutput(genesisTransaction.recipient, genesisTransaction.value,
                 genesisTransaction.transactionId)); // manually add the Transactions Output
         UTXOs.put(genesisTransaction.outputs.get(0).id, genesisTransaction.outputs.get(0)); // its important to store
                                                                                             // our first transaction in
@@ -62,7 +62,12 @@ public class NoobChain {
         System.out.println("\nWalletA's balance is: " + walletA.getBalance());
         System.out.println("WalletB's balance is: " + walletB.getBalance());
 
-        validChain();
+        if (!validChain()) {
+            System.out.println("Blockchain is invalid!");
+        } else {
+            System.out.println("Blockchain is valid");
+        }
+        ;
 
     }
 
@@ -87,7 +92,7 @@ public class NoobChain {
                 return false;
             }
             // compare previous hash and registered previous hash
-            if (!previousBlock.hash.equals(currentBlock.previousHash)) {
+            if (!previousBlock.hash.equals(currentBlock.prevHash)) {
                 System.out.println("#Previous Hashes not equal");
                 return false;
             }
@@ -131,7 +136,7 @@ public class NoobChain {
                     tempUTXOs.put(output.id, output);
                 }
 
-                if (currentTransaction.outputs.get(0).reciepient != currentTransaction.reciepient) {
+                if (currentTransaction.outputs.get(0).reciepient != currentTransaction.recipient) {
                     System.out.println("#Transaction(" + t + ") output reciepient is not who it should be");
                     return false;
                 }

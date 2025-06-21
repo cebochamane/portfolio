@@ -5,7 +5,7 @@ public class Transaction {
 
     public String transactionId; // this is also the hash of the transaction.
     public PublicKey sender; // senders address/public key.
-    public PublicKey reciepient; // Recipients address/public key.
+    public PublicKey recipient; // Recipients address/public key.
     public float value;
     public byte[] signature; // this is to prevent anybody else from spending funds in our wallet.
 
@@ -17,7 +17,7 @@ public class Transaction {
     // Constructor:
     public Transaction(PublicKey from, PublicKey to, float value, ArrayList<TransactionInput> inputs) {
         this.sender = from;
-        this.reciepient = to;
+        this.recipient = to;
         this.value = value;
         this.inputs = inputs;
     }
@@ -27,20 +27,20 @@ public class Transaction {
         sequence++; // increase the sequence to avoid 2 identical transactions having the same hash
         return StringUtil.turnIntoUnrecognizableGibberish(
                 StringUtil.getStringFromKey(sender) +
-                        StringUtil.getStringFromKey(reciepient) +
+                        StringUtil.getStringFromKey(recipient) +
                         Float.toString(value) + sequence);
     }
 
     // Signs all the data we dont wish to be tampered with.
     public void generateSignature(PrivateKey privateKey) {
-        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient)
+        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient)
                 + Float.toString(value);
         signature = StringUtil.applyECDSASig(privateKey, data);
     }
 
     // Verifies the data we signed hasnt been tampered with
     public boolean verifySignature() {
-        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(reciepient)
+        String data = StringUtil.getStringFromKey(sender) + StringUtil.getStringFromKey(recipient)
                 + Float.toString(value);
         return StringUtil.verifyECDSASig(sender, data, signature);
     }
@@ -67,9 +67,12 @@ public class Transaction {
         // generate transaction outputs:
         float leftOver = getInputsValue() - value; // get value of inputs then the left over change:
         transactionId = calulateHash();
-        outputs.add(new TransactionOutput(this.reciepient, value, transactionId)); // send value to recipient
-        outputs.add(new TransactionOutput(this.sender, leftOver, transactionId)); // send the left over 'change' back to
-                                                                                  // sender
+        outputs.add(new TransactionOutput(this.recipient, value, transactionId)); // send value to recipient
+        if (leftOver > 0) {
+            outputs.add(new TransactionOutput(this.sender, leftOver, transactionId)); // send the left over 'change'
+                                                                                      // back to
+            // sender
+        }
 
         // add outputs to Unspent list
         for (TransactionOutput o : outputs) {
@@ -105,4 +108,5 @@ public class Transaction {
         }
         return total;
     }
+
 }

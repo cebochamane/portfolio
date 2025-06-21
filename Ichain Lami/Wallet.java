@@ -48,6 +48,10 @@ public class Wallet {
 
     // Generates and returns a new transaction from this wallet.
     public Transaction sendFunds(PublicKey _recipient, float value) {
+        if (value < NoobChain.minimumTransaction) {
+            System.out.println("#Transaction value below minimum. Transaction Discarded.");
+            return null;
+        }
         if (getBalance() < value) { // gather balance and check funds.
             System.out.println("#Not Enough funds to send transaction. Transaction Discarded.");
             return null;

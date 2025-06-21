@@ -4,7 +4,6 @@ import java.util.Date;
 public class Stina {
     public String hash;
     public String prevHash;
-    private String data;
     private long timeStamp;
     private int nonce;
     public String merkleRoot;
