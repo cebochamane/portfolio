@@ -1,0 +1,8 @@
+{
+    "java.project.sourcePaths": [
+        "Ichain Lami"
+    ],
+    "java.project.referencedLibraries": [
+        "Ichain Lami\\lib\\gson-2.13.1.jar"
+    ]
+}
