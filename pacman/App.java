@@ -5,11 +5,11 @@ public class App {
         JFrame frame = new JFrame("Pac Man");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setResizable(false);
+        frame.setLocationRelativeTo(null);
 
         GamePanel gamePanel = new GamePanel();
         frame.add(gamePanel);
         frame.pack();
-        frame.setLocationRelativeTo(null);
         frame.setVisible(true);
     }
 }

@@ -4,13 +4,12 @@ public class GameConfig {
     public static final int TILE_SIZE = 32;
     public static final int BOARD_WIDTH = COLUMN_COUNT * TILE_SIZE;
     public static final int BOARD_HEIGHT = ROW_COUNT * TILE_SIZE;
-    public static final char[] DIRECTIONS = { 'U', 'D', 'L', 'R' };
 
     public static final String[] TILE_MAP = {
             "XXXXXXXXXXXXXXXXXXX",
             "X        X        X",
             "X XX XXX X XXX XX X",
-            "X        C       X",
+            "X                 X",
             "X XX X XXXXX X XX X",
             "X    X       X    X",
             "XXXX XXXX XXXX XXXX",
@@ -26,7 +25,7 @@ public class GameConfig {
             "XX X X XXXXX X X XX",
             "X    X   X   X    X",
             "X XXXXXX X XXXXXX X",
-            "X        C       X",
+            "X                 X",
             "XXXXXXXXXXXXXXXXXXX"
     };
 }
