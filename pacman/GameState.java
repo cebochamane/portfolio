@@ -10,11 +10,16 @@ public class GameState {
     public int highScore = 0;
     public int lives = 3;
     public boolean gameOver = false;
+    public Block cherry;
+    public long lastCherryTime;
+    public static final long CHERRY_SPAWN_INTERVAL = 10000; // 10 seconds
 
     public void resetGame() {
         score = 0;
         lives = 3;
         gameOver = false;
+        cherry = null;
+        lastCherryTime = 0;
     }
 
     public void updateHighScore() {

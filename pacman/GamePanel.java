@@ -10,6 +10,8 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
     private Timer gameLoop;
     private Random random;
     private char[] directions = { 'U', 'D', 'L', 'R' };
+    private static final int CHERRY_SCORE = 500;
+    private static final int CHERRY_SIZE = 20;
 
     public GamePanel() {
         setPreferredSize(new Dimension(GameConfig.BOARD_WIDTH, GameConfig.BOARD_HEIGHT));
@@ -117,6 +119,28 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         }
     }
 
+    private void spawnCherry() {
+        long currentTime = System.currentTimeMillis();
+        if (state.cherry == null &&
+                currentTime - state.lastCherryTime > GameState.CHERRY_SPAWN_INTERVAL) {
+
+            // Find a random position not occupied by walls
+            int attempts = 0;
+            while (attempts < 100) { // Try 100 times to find a valid position
+                int x = random.nextInt(GameConfig.BOARD_WIDTH - CHERRY_SIZE);
+                int y = random.nextInt(GameConfig.BOARD_HEIGHT - CHERRY_SIZE);
+
+                Block tempCherry = new Block(assets.cherryImage, x, y, CHERRY_SIZE, CHERRY_SIZE);
+                if (CollisionHelper.checkCollisionWithSet(tempCherry, state.walls) == null) {
+                    state.cherry = tempCherry;
+                    state.lastCherryTime = currentTime;
+                    break;
+                }
+                attempts++;
+            }
+        }
+    }
+
     public void paintComponent(Graphics g) {
         super.paintComponent(g);
         draw(g);
@@ -136,7 +160,11 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
         for (Block wall : state.walls) {
             g.drawImage(wall.image, wall.x, wall.y, wall.width, wall.height, null);
         }
-
+        // Draw cherry
+        if (state.cherry != null) {
+            g.drawImage(state.cherry.image, state.cherry.x, state.cherry.y,
+                    state.cherry.width, state.cherry.height, null);
+        }
         // Draw food
         g.setColor(Color.WHITE);
         for (Block food : state.foods) {
@@ -205,6 +233,14 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             state.score += 10;
         }
 
+        // Check cherry collision
+        if (state.cherry != null && CollisionHelper.collision(state.pacman, state.cherry)) {
+            state.score += CHERRY_SCORE;
+            state.cherry = null;
+        }
+
+        // Maybe spawn a new cherry
+        spawnCherry();
         // Check if level is complete
         if (state.foods.isEmpty()) {
             loadMap();
@@ -222,6 +258,7 @@ public class GamePanel extends JPanel implements ActionListener, KeyListener {
             char newDirection = directions[random.nextInt(4)];
             updateGhostDirection(ghost, newDirection);
         }
+        state.cherry = null;
     }
 
     @Override

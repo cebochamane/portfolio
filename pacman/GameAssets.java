@@ -11,6 +11,7 @@ public class GameAssets {
     public Image pacmanDownImage;
     public Image pacmanLeftImage;
     public Image pacmanRightImage;
+    public Image cherryImage;
 
     public GameAssets() {
         // Load all game images
@@ -23,5 +24,6 @@ public class GameAssets {
         pacmanDownImage = new ImageIcon(getClass().getResource("./pacmanDown.png")).getImage();
         pacmanLeftImage = new ImageIcon(getClass().getResource("./pacmanLeft.png")).getImage();
         pacmanRightImage = new ImageIcon(getClass().getResource("./pacmanRight.png")).getImage();
+        cherryImage = new ImageIcon(getClass().getResource("./cherry.png")).getImage();
     }
 }
