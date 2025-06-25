@@ -42,7 +42,7 @@ public class Stina {
                 Long.toString(timeStamp) +
                 Integer.toString(nonce) +
                 merkleRoot;
-        return StringUtil.applySha256(input);
+        return StringUtil.turnIntoUnrecognizableGibberish(input);
     }
 
     /**

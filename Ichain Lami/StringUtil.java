@@ -1,49 +1,64 @@
-import java.security.Key;
-import java.security.MessageDigest;
-import java.security.PrivateKey;
-import java.security.PublicKey;
-import java.security.Signature;
+import java.security.*;
 import java.util.ArrayList;
 import java.util.Base64;
 
+/**
+ * Provides cryptographic utility functions for the blockchain
+ */
 public class StringUtil {
-    // Applying Sha256
-    public static String turnIntoUnrecognizableGibberish(String input) {
+
+    /**
+     * Applies SHA-256 hashing to input string
+     * 
+     * @param input String to hash
+     * @return Hex-encoded SHA-256 hash
+     */
+    public static String applySha256(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes("UTF-8"));
-            StringBuffer hexString = new StringBuffer();
-            for (int i = 0; i < hash.length; i++) {
-                String hex = Integer.toHexString(0xff & hash[i]);
+            StringBuilder hexString = new StringBuilder();
+
+            // Convert byte array to hex string
+            for (byte b : hash) {
+                String hex = Integer.toHexString(0xff & b);
                 if (hex.length() == 1)
                     hexString.append('0');
                 hexString.append(hex);
             }
+
             return hexString.toString();
-
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to generate SHA-256 hash", e);
         }
     }
 
-    // Applies ECDSA Signature and returns the result ( as bytes ).
+    /**
+     * Signs data using ECDSA private key
+     * 
+     * @param privateKey Signer's private key
+     * @param input      Data to sign
+     * @return Digital signature
+     */
     public static byte[] applyECDSASig(PrivateKey privateKey, String input) {
-        Signature dsa;
-        byte[] output = new byte[0];
         try {
-            dsa = Signature.getInstance("ECDSA", "BC");
+            Signature dsa = Signature.getInstance("ECDSA", "BC");
             dsa.initSign(privateKey);
-            byte[] strByte = input.getBytes();
-            dsa.update(strByte);
-            byte[] realSig = dsa.sign();
-            output = realSig;
+            dsa.update(input.getBytes());
+            return dsa.sign();
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to generate ECDSA signature", e);
         }
-        return output;
     }
 
-    // Verifies a String signature
+    /**
+     * Verifies ECDSA signature
+     * 
+     * @param publicKey Signer's public key
+     * @param data      Original data that was signed
+     * @param signature Signature to verify
+     * @return true if signature is valid
+     */
     public static boolean verifyECDSASig(PublicKey publicKey, String data, byte[] signature) {
         try {
             Signature ecdsaVerify = Signature.getInstance("ECDSA", "BC");
@@ -51,34 +66,64 @@ public class StringUtil {
             ecdsaVerify.update(data.getBytes());
             return ecdsaVerify.verify(signature);
         } catch (Exception e) {
-            throw new RuntimeException(e);
+            throw new RuntimeException("Failed to verify ECDSA signature", e);
         }
     }
 
+    /**
+     * Encodes key as Base64 string
+     * 
+     * @param key Public or private key
+     * @return Base64-encoded key
+     */
     public static String getStringFromKey(Key key) {
         return Base64.getEncoder().encodeToString(key.getEncoded());
     }
 
-    // Tacks in array of transactions and returns a merkle root.
+    /**
+     * Calculates Merkle root from transaction list
+     * 
+     * @param transactions List of transactions
+     * @return SHA-256 hash representing Merkle root
+     */
     public static String getMerkleRoot(ArrayList<Transaction> transactions) {
-        int count = transactions.size();
+        // Handle empty transaction list
+        if (transactions == null || transactions.isEmpty()) {
+            return "";
+        }
+
         ArrayList<String> previousTreeLayer = new ArrayList<String>();
+
+        // Start with transaction IDs as first layer
         for (Transaction transaction : transactions) {
             previousTreeLayer.add(transaction.transactionId);
         }
+
         ArrayList<String> treeLayer = previousTreeLayer;
-        while (count > 1) {
+
+        // Recursively hash pairs until we get to root
+        while (treeLayer.size() > 1) {
             treeLayer = new ArrayList<String>();
-            for (int i = 1; i < previousTreeLayer.size(); i++) {
-                treeLayer.add(turnIntoUnrecognizableGibberish(previousTreeLayer.get(i - 1) + previousTreeLayer.get(i)));
+
+            // Hash adjacent pairs
+            for (int i = 1; i < previousTreeLayer.size(); i += 2) {
+                String left = previousTreeLayer.get(i - 1);
+                String right = (i < previousTreeLayer.size()) ? previousTreeLayer.get(i) : left;
+                treeLayer.add(applySha256(left + right));
             }
-            count = treeLayer.size();
             previousTreeLayer = treeLayer;
         }
-        String merkleRoot = (treeLayer.size() == 1) ? treeLayer.get(0) : "";
-        return merkleRoot;
+
+        // Return root hash (or empty string if no transactions)
+        return (treeLayer.size() == 1) ? treeLayer.get(0) : "";
     }
 
+    /**
+     * Creates difficulty target string for mining
+     * 
+     * @param difficulty Number of leading zeros required
+     * @return String of zeros with specified length
+     */
     public static String getDifficultyString(int difficulty) {
         return new String(new char[difficulty]).replace('\0', '0');
     }
