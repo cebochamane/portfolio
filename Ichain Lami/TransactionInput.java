@@ -1,7 +1,20 @@
+/**
+ * Represents an input to a transaction
+ * References an unspent transaction output (UTXO)
+ */
 public class TransactionInput {
-    public String transactionOutputId; // Reference to TransactionOutputs -> transactionId
-    public TransactionOutput UTXO; // Contains the Unspent transaction output
 
+    // Reference to the transaction output being spent
+    public String transactionOutputId;
+
+    // The actual unspent transaction output
+    public TransactionOutput UTXO;
+
+    /**
+     * Constructor
+     * 
+     * @param transactionOutputId ID of the UTXO being spent
+     */
     public TransactionInput(String transactionOutputId) {
         this.transactionOutputId = transactionOutputId;
     }
