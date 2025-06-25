@@ -5,13 +5,13 @@ public class GameState {
     public HashSet<Block> foods;
     public HashSet<Block> ghosts;
     public Block pacman;
+    public Block cherry;
 
     public int score = 0;
-    public int highScore = 0;
+    public int highScore = HighScoreManager.loadHighScore();
     public int lives = 3;
     public boolean gameOver = false;
-    public Block cherry;
-    public long lastCherryTime;
+    public long lastCherryTime = 0;
     public static final long CHERRY_SPAWN_INTERVAL = 10000; // 10 seconds
 
     public void resetGame() {
@@ -25,6 +25,7 @@ public class GameState {
     public void updateHighScore() {
         if (score > highScore) {
             highScore = score;
+            HighScoreManager.saveHighScore(highScore);
         }
     }
 }

@@ -14,7 +14,6 @@ public class GameAssets {
     public Image cherryImage;
 
     public GameAssets() {
-        // Load all game images
         wallImage = new ImageIcon(getClass().getResource("./wall.png")).getImage();
         blueGhostImage = new ImageIcon(getClass().getResource("./blueGhost.png")).getImage();
         orangeGhostImage = new ImageIcon(getClass().getResource("./orangeGhost.png")).getImage();

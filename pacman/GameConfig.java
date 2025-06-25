@@ -4,6 +4,7 @@ public class GameConfig {
     public static final int TILE_SIZE = 32;
     public static final int BOARD_WIDTH = COLUMN_COUNT * TILE_SIZE;
     public static final int BOARD_HEIGHT = ROW_COUNT * TILE_SIZE;
+    public static final int INITIAL_FOOD_COUNT = 244;
 
     public static final String[] TILE_MAP = {
             "XXXXXXXXXXXXXXXXXXX",
