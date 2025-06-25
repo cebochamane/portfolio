@@ -44,7 +44,7 @@ public class Transaction {
      */
     private String calculateHash() {
         sequence++; // Ensure unique hash even for identical transactions
-        return StringUtil.applySha256(
+        return StringUtil.turnIntoUnrecognizableGibberish(
                 StringUtil.getStringFromKey(sender) +
                         StringUtil.getStringFromKey(recipient) +
                         Float.toString(value) +

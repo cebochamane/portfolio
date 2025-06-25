@@ -13,7 +13,7 @@ public class StringUtil {
      * @param input String to hash
      * @return Hex-encoded SHA-256 hash
      */
-    public static String applySha256(String input) {
+    public static String turnIntoUnrecognizableGibberish(String input) {
         try {
             MessageDigest digest = MessageDigest.getInstance("SHA-256");
             byte[] hash = digest.digest(input.getBytes("UTF-8"));
@@ -109,7 +109,7 @@ public class StringUtil {
             for (int i = 1; i < previousTreeLayer.size(); i += 2) {
                 String left = previousTreeLayer.get(i - 1);
                 String right = (i < previousTreeLayer.size()) ? previousTreeLayer.get(i) : left;
-                treeLayer.add(applySha256(left + right));
+                treeLayer.add(turnIntoUnrecognizableGibberish(left + right));
             }
             previousTreeLayer = treeLayer;
         }

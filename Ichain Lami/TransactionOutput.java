@@ -31,7 +31,7 @@ public class TransactionOutput {
         this.parentTransactionId = parentTransactionId;
 
         // Create ID by hashing recipient, value and parent transaction
-        this.id = StringUtil.applySha256(
+        this.id = StringUtil.turnIntoUnrecognizableGibberish(
                 StringUtil.getStringFromKey(recipient) +
                         Float.toString(value) +
                         parentTransactionId);
